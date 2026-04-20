@@ -1,0 +1,92 @@
+# Orders API
+
+API REST para la gestión de órdenes de compra desarrollada con Spring Boot. El sistema permite registrar usuarios, administrar productos con control de stock y generar órdenes de compra, aplicando validaciones básicas de negocio y cálculos automáticos de totales.
+
+## Tecnologías utilizadas
+
+El proyecto está desarrollado con Java 21 utilizando Spring Boot como framework principal. Se emplea Spring Data JPA para la persistencia, PostgreSQL como base de datos relacional y Maven como herramienta de construcción del proyecto.
+
+## Funcionalidad general
+
+La API permite realizar operaciones básicas sobre tres dominios principales: usuarios, productos y órdenes. Se pueden registrar y consultar usuarios, crear productos con precio y stock disponible, y generar órdenes de compra que incluyen uno o varios productos.
+
+Durante la creación de una orden, el sistema valida que exista al menos un producto, verifica que haya suficiente stock disponible para cada ítem solicitado, descuenta el stock correspondiente y calcula automáticamente el subtotal, el impuesto (IVA del 16%) y el total final de la orden.
+
+## Instrucciones de ejecución
+
+Para ejecutar el proyecto en un entorno local, primero es necesario clonar el repositorio:
+
+```bash id="c1a9f3"
+git clone https://github.com/Hasam-ai/ordenesapi.git
+cd ordenesapi
+```
+
+Posteriormente, se debe crear una base de datos en PostgreSQL:
+
+```sql id="a7d2c1"
+CREATE DATABASE orders_db;
+```
+
+Si el proyecto incluye scripts SQL, estos pueden ejecutarse para crear la estructura de tablas y datos iniciales:
+
+```bash id="f4b8d2"
+psql -U postgres -d orders_db -f database/tescha.sql
+psql -U postgres -d orders_db -f database/data.sql
+```
+
+Después, se debe configurar la conexión a la base de datos en el archivo `src/main/resources/application.properties`:
+
+```properties id="b2f9e1"
+spring.datasource.url=jdbc:postgresql://localhost:5432/orders_db
+spring.datasource.username=postgres
+spring.datasource.password=Asteci7
+
+spring.jpa.hibernate.ddl-auto=none
+spring.jpa.show-sql=true
+```
+
+Finalmente, la aplicación puede ejecutarse con el siguiente comando:
+
+```bash id="d3c7a5"
+mvn spring-boot:run
+```
+
+Una vez iniciada, la API estará disponible en `http://localhost:8080`.
+
+## Uso de la API
+
+La API expone endpoints REST para cada recurso principal. Para usuarios y productos se pueden realizar operaciones de creación y consulta. En el caso de órdenes, se permite registrar nuevas órdenes y consultar las existentes.
+
+Para probar la API, se pueden utilizar herramientas como curl o Postman. Si se incluye un archivo de scripts, se puede ejecutar directamente:
+
+```bash id="e8a6c4"
+bash curl/requests.sh
+```
+
+Un ejemplo de solicitud para crear una orden es el siguiente:
+
+```json id="f9d1b6"
+{
+  "userId": 1,
+  "items": [
+    {
+      "productId": 1,
+      "cantidad": 2
+    }
+  ]
+}
+```
+
+## Arquitectura del proyecto
+
+El proyecto sigue una estructura en capas que separa responsabilidades. Los controladores exponen los endpoints REST, los servicios contienen la lógica de negocio, los repositorios gestionan el acceso a la base de datos y las entidades representan las tablas.
+
+Esta organización facilita el mantenimiento del código y permite una evolución gradual del sistema.
+
+## Consideraciones actuales
+
+La implementación cubre los requisitos principales del sistema, incluyendo validación de stock y cálculo de totales. Sin embargo, el manejo de errores es básico y las validaciones de entrada son limitadas. Además, no se emplean objetos DTO en todas las operaciones, lo que podría mejorarse para desacoplar la capa de presentación de la persistencia.
+
+## Autor
+
+Antonio
