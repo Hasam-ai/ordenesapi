@@ -13,6 +13,7 @@ import com.example.ordenesapi.entity.User;
 import java.util.List;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import jakarta.validation.Valid;
 
 // Excel
 import org.apache.poi.ss.usermodel.*;
@@ -27,7 +28,7 @@ public class UserController {
     private final UserMapper mapper;
 
     @PostMapping
-    public UserResponse create(@RequestBody UserRequest request) {
+    public UserResponse create(@Valid @RequestBody UserRequest request) {
         return mapper.toResponse(repository.save(mapper.toEntity(request)));
     }
 
